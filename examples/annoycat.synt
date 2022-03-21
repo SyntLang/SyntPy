@@ -1,0 +1,25 @@
+? annoy cat
+
+> moew function
+staticalg meow {
+	output "Cat: Meow!"
+}
+
+> stop function
+staticalg stop {
+	output "Cat: =("
+	end
+}
+
+> game loop
+staticalg gameloop {
+	var text msg ""
+	input msg "You: "
+
+	check #msg# = "SHUT UP!" stop meow
+}
+
+loop on gameloop
+
+end
+
