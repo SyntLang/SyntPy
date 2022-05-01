@@ -1,9 +1,9 @@
 # Operator Algorithms
 
 # add
-def add(engine, *args):
+def add(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -15,14 +15,14 @@ def add(engine, *args):
 
 	# throw error if output variable is not defined
 	if output_variable is None:
-		engine.throw("Output variable not found")
+		self.throw("Output variable not found")
 	
 	# get input variables
 	input_variables = args[1:] if len(args) > 1 else []
 
 	# throw error if input variables are not defined
 	if len(input_variables) == 0:
-		engine.throw("Input variables not found")
+		self.throw("Input variables not found")
 	
 	# decimal error fix
 	decimal_length = 0
@@ -31,15 +31,15 @@ def add(engine, *args):
 	fixed_input_variables = []
 	for input_variable in input_variables:
 		append_val = input_variable
-		if engine.value_type(input_variable) == "binary":
+		if self.value_type(input_variable) == "binary":
 			append_val = "0" if input_variable == "off" else "1"
-		if engine.value_type(input_variable) == "text" and append_val not in "01":
+		if self.value_type(input_variable) == "text" and append_val not in "01":
 			output_value_type = "text"
 			break
-		if engine.value_type(input_variable) == "nothing":
+		if self.value_type(input_variable) == "nothing":
 			output_value_type = "text"
 			break
-		if engine.value_type(input_variable) == "decimal":
+		if self.value_type(input_variable) == "decimal":
 			output_value_type = "decimal"
 			if len(str(input_variable).split('.')[1]) > decimal_length:
 				decimal_length = len(input_variable.split('.')[1])
@@ -105,12 +105,12 @@ def add(engine, *args):
 	}
 
 	# update output variable
-	engine.update_variable(output_variable_data)
+	self.update_variable(output_variable_data)
 
 # subtract
-def subtract(engine, *args):
+def subtract(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -122,14 +122,14 @@ def subtract(engine, *args):
 
 	# throw error if output variable is not defined
 	if output_variable is None:
-		engine.throw("Output variable not found")
+		self.throw("Output variable not found")
 	
 	# get input variables
 	input_variables = args[1:] if len(args) > 1 else []
 
 	# throw error if input variables are not defined
 	if len(input_variables) == 0:
-		engine.throw("Input variables not found")
+		self.throw("Input variables not found")
 	
 	# append input variables with respective value types
 	text_input_variables = []
@@ -138,14 +138,14 @@ def subtract(engine, *args):
 	# put input variables into respective arrays
 	for input_variable in input_variables:
 		append_val = input_variable
-		if engine.value_type(input_variable) == "binary":
+		if self.value_type(input_variable) == "binary":
 			value = 0 if input_variable == "off" else 1
 			number_input_variables.append(value)
-		elif engine.value_type(input_variable) == "number":
+		elif self.value_type(input_variable) == "number":
 			number_input_variables.append(int(input_variable))
-		elif engine.value_type(input_variable) == "decimal":
+		elif self.value_type(input_variable) == "decimal":
 			number_input_variables.append(float(input_variable))
-		elif engine.value_type(input_variable) == "nothing":
+		elif self.value_type(input_variable) == "nothing":
 			number_input_variables.append(0)
 		else:
 			text_input_variables.append(input_variable)
@@ -206,12 +206,12 @@ def subtract(engine, *args):
 	}
 
 	# update output variable
-	engine.update_variable(output_variable_data)
+	self.update_variable(output_variable_data)
 
 # multiply
-def multiply(engine, *args):
+def multiply(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -223,14 +223,14 @@ def multiply(engine, *args):
 
 	# throw error if output variable is not defined
 	if output_variable is None:
-		engine.throw("Output variable not found")
+		self.throw("Output variable not found")
 	
 	# get input variables
 	input_variables = args[1:] if len(args) > 1 else []
 
 	# throw error if input variables are not defined
 	if len(input_variables) == 0:
-		engine.throw("Input variables not found")
+		self.throw("Input variables not found")
 
 	# append input variables with respective value types
 	text_input_variables = []
@@ -240,12 +240,12 @@ def multiply(engine, *args):
 	# put input variables into respective arrays
 	for input_variable in input_variables:
 		append_val = input_variable
-		if engine.value_type(input_variable) == "binary":
+		if self.value_type(input_variable) == "binary":
 			value = 0 if input_variable == "off" else 1
 			number_input_variables.append(value)
-		elif engine.value_type(input_variable) == "number":
+		elif self.value_type(input_variable) == "number":
 			number_input_variables.append(input_variable)
-		elif engine.value_type(input_variable) == "decimal":
+		elif self.value_type(input_variable) == "decimal":
 			power_of_ten = len(str(input_variable).split('.')[1])
 			value = float(input_variable) * (10 ** power_of_ten)
 			number_input_variables.append(value)
@@ -293,12 +293,12 @@ def multiply(engine, *args):
 	}
 
 	# update output variable
-	engine.update_variable(output_variable_data)
+	self.update_variable(output_variable_data)
 
 # divide
-def divide(engine, *args):
+def divide(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -310,7 +310,7 @@ def divide(engine, *args):
 
 	# throw error if output variable is not defined
 	if output_variable is None:
-		engine.throw("Output variable not found")
+		self.throw("Output variable not found")
 	
 	# get input variables
 	numerator_variable = args[1] if len(args) > 1 else None
@@ -318,53 +318,53 @@ def divide(engine, *args):
 
 	# throw error if input variables are not defined
 	if numerator_variable is None:
-		engine.throw("Input variables not found: numerator")
+		self.throw("Input variables not found: numerator")
 	if denominator_variable is None:
-		engine.throw("Input variables not found: denominator")
+		self.throw("Input variables not found: denominator")
 
 	# check numerator variable type
-	if engine.value_type(numerator_variable) == "binary":
+	if self.value_type(numerator_variable) == "binary":
 		numerator_variable = {"type": "num", "value": 0} if numerator_variable == "off" else {"type": "num", "value": 1}
-	elif engine.value_type(numerator_variable) == "number":
+	elif self.value_type(numerator_variable) == "number":
 		numerator_variable = {"type": "num", "value": int(numerator_variable)}
-	elif engine.value_type(numerator_variable) == "decimal":
+	elif self.value_type(numerator_variable) == "decimal":
 		integral_part = int(str(numerator_variable).split('.')[0])
 		fractional_part = int(str(numerator_variable).split('.')[1])
 		power_of_ten = len(str(fractional_part))
 		integral_value = float(str(integral_part)+str(fractional_part)) * (10 ** power_of_ten)
 		numerator_variable = {"type": "decimal", "value": [integral_value, 10 ** power_of_ten]}
-	elif engine.value_type(numerator_variable) == "nothing":
+	elif self.value_type(numerator_variable) == "nothing":
 		numerator_variable = {"type": "num", "value": 0}
 	else:
 		numerator_variable = {"type": "num", "value": int(len(str(numerator_variable)))}
 	
 	# check denominator variable type
-	if engine.value_type(denominator_variable) == "binary":
+	if self.value_type(denominator_variable) == "binary":
 		denominator_variable = {"type": "num", "value": 0} if denominator_variable == "off" else {"type": "num", "value": 1}
-	elif engine.value_type(denominator_variable) == "number":
+	elif self.value_type(denominator_variable) == "number":
 		denominator_variable = {"type": "num", "value": int(denominator_variable)}
-	elif engine.value_type(denominator_variable) == "decimal":
+	elif self.value_type(denominator_variable) == "decimal":
 		integral_part = int(str(denominator_variable).split('.')[0])
 		fractional_part = int(str(denominator_variable).split('.')[1])
 		power_of_ten = len(str(fractional_part))
 		integral_value = float(str(integral_part)+str(fractional_part)) * (10 ** power_of_ten)
 		denominator_variable = {"type": "decimal", "value": [integral_value, 10 ** power_of_ten]}
-	elif engine.value_type(denominator_variable) == "nothing":
+	elif self.value_type(denominator_variable) == "nothing":
 		denominator_variable = {"type": "num", "value": 0}
 	else:
 		denominator_variable = {"type": "num", "value": int(len(str(denominator_variable)))}
 
 	# validate numerator variable
 	if numerator_variable["type"] == "text":
-		engine.throw("Invalid numerator type: text")
+		self.throw("Invalid numerator type: text")
 
 	# validate denominator variable
 	if denominator_variable["type"] == "text":
-		engine.throw("Invalid denominator type: text")
+		self.throw("Invalid denominator type: text")
 	if denominator_variable["type"] == "num" and denominator_variable["value"] == 0:
-		engine.throw("Invalid denominator value: 0")
+		self.throw("Invalid denominator value: 0")
 	if denominator_variable["type"] == "decimal" and denominator_variable["value"][0] == 0:
-		engine.throw("Invalid denominator value: 0")
+		self.throw("Invalid denominator value: 0")
 	
 	# get output
 	if numerator_variable["type"] == "num":
@@ -389,12 +389,12 @@ def divide(engine, *args):
 	}
 
 	# update output variable
-	engine.update_variable(output_variable_data)
+	self.update_variable(output_variable_data)
 
 # power
-def power(engine, *args):
+def power(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -406,7 +406,7 @@ def power(engine, *args):
 
 	# throw error if output variable is not defined
 	if output_variable is None:
-		engine.throw("Output variable not found")
+		self.throw("Output variable not found")
 	
 	# get input variables
 	base_variable = args[1] if len(args) > 1 else None
@@ -414,30 +414,30 @@ def power(engine, *args):
 
 	# throw error if input variables are not defined
 	if base_variable is None:
-		engine.throw("Input variables not found: base")
+		self.throw("Input variables not found: base")
 	if exponent_variable is None:
-		engine.throw("Input variables not found: exponent")
+		self.throw("Input variables not found: exponent")
 
 	# check base variable type
-	if engine.value_type(base_variable) == "binary":
+	if self.value_type(base_variable) == "binary":
 		base_variable = {"type": "num", "value": 0} if base_variable == "off" else {"type": "num", "value": 1}
-	elif engine.value_type(base_variable) == "number":
+	elif self.value_type(base_variable) == "number":
 		base_variable = {"type": "num", "value": int(base_variable)}
-	elif engine.value_type(base_variable) == "decimal":
+	elif self.value_type(base_variable) == "decimal":
 		base_variable = {"type": "decimal", "value": float(base_variable)}
-	elif engine.value_type(base_variable) == "nothing":
+	elif self.value_type(base_variable) == "nothing":
 		base_variable = {"type": "num", "value": 0}
 	else:
 		base_variable = {"type": "text", "value": str(base_variable)}
 
 	# check exponent variable type
-	if engine.value_type(exponent_variable) == "binary":
+	if self.value_type(exponent_variable) == "binary":
 		exponent_variable = {"type": "num", "value": 0} if exponent_variable == "off" else {"type": "num", "value": 1}
-	elif engine.value_type(exponent_variable) == "number":
+	elif self.value_type(exponent_variable) == "number":
 		exponent_variable = {"type": "num", "value": int(exponent_variable)}
-	elif engine.value_type(exponent_variable) == "decimal":
+	elif self.value_type(exponent_variable) == "decimal":
 		exponent_variable = {"type": "decimal", "value": float(exponent_variable)}
-	elif engine.value_type(exponent_variable) == "nothing":
+	elif self.value_type(exponent_variable) == "nothing":
 		exponent_variable = {"type": "num", "value": 0}
 	else:
 		exponent_variable = {"type": "num", "value": int(len(str(exponent_variable)))}
@@ -477,5 +477,41 @@ def power(engine, *args):
 	}
 
 	# update output variable
-	engine.update_variable(output_variable_data)
+	self.update_variable(output_variable_data)
+
+# type
+def object_type(self, *args):
+	# check if run_status is run
+	if self.run_status == "run":
+		pass
+	else:
+		return
+	
+	# get output variable
+	output_variable = args[0] if len(args) > 0 else None
+
+	# throw error if output variable is not defined
+	if output_variable is None:
+		self.throw("Output variable not found")
+	
+	# get input variables
+	input_variable = args[1] if len(args) > 1 else ''
+	
+	# get input variable value type
+	input_variable_type = self.value_type(input_variable)
+
+	# check if input variable is defined
+	if input_variable_type == "collection":
+		input_variable_type = "collection"
+	elif input_variable in self.variables:
+		input_variable_type = self.variables[input_variable]["type"]
+	
+	# set output variable data
+	output_variable_data = {
+		"name": output_variable,
+		"value": input_variable_type
+	}
+
+	# update output variable
+	self.update_variable(output_variable_data)
 

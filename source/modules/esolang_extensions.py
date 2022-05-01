@@ -136,8 +136,9 @@ class Esolang:
 			if char in self.splitter_tokens:
 				# check if char is token end
 				if self.splitter_tokens[char] == ",":
-					tokens.append(itr_token)
+					tokens.append(itr_token[:-1])
 					itr_token = ""
+					tokens.append(char)
 				else:
 					# add iterating token to output tokens
 					tokens.append(itr_token[:-1])
@@ -145,10 +146,14 @@ class Esolang:
 
 					# check if starting token
 					if self.splitter_tokens[char] == ".":
-						itr_token += char
+						tokens.append(char)
+						itr_token = ""
 		
 		# add last iterating token
 		tokens.append(itr_token)
+
+		# remove empty tokens
+		tokens = [token for token in tokens if token]
 
 		# return tokens
 		return tokens
@@ -236,16 +241,20 @@ class Esolang:
 					partial_collections.append(organized_tokens[itr_index])
 					itr_index += 1
 			else:
-				# check if next token is a collection or algorithm
-				if organized_tokens[itr_index + 1][0] in self.splitter_tokens:
-					# add collection with current token to partial collections
-					this_collection = organized_tokens[itr_index] + [organized_tokens[itr_index + 1][1:-1]]
-					partial_collections.append(this_collection)
-					itr_index += 2
+				# check if token is collection or algorithm
+				if organized_tokens[itr_index][0] in self.splitter_tokens:
+					# check if index not 0
+					if itr_index > 0:
+						# add to previous collection
+						partial_collections[-1] = partial_collections[-1] + organized_tokens[itr_index][1:-1]
+					else:
+						self.throw(f"Unexpected Token: {organized_tokens[itr_index][0]}")
 				else:
-					# add only current token to partial collections
+					# simply add to partial collections
 					partial_collections.append(organized_tokens[itr_index])
-					itr_index += 1
+
+				# increment index
+				itr_index += 1
 		
 		# set organized tokens to partial collections
 		organized_tokens = partial_collections
@@ -342,7 +351,8 @@ class Esolang:
 		args = []
 
 		# covert argument to string
-		argument_string = " ".join([data if type(data[-1]) != type([]) else data[:-1]][0] if len(data) > 0 else [])
+		argument_string = " ".join([argument for argument in data if type(argument) != type([])])
+		extra_arguments = ({index: argument for index, argument in enumerate(data) if type(argument) == type([])}.values())
 		
 		# split for strings
 		args = argument_string.split("\"")
@@ -414,8 +424,8 @@ class Esolang:
 				else:
 					partial_args.append(token)
 		
-		# apply partial arguments
-		args = (partial_args if type(data[-1]) != type([]) else partial_args + [data[-1]]) if len(data) > 0 else partial_args
+		# put extra arguments back in
+		args = partial_args + list(extra_arguments)
 
 		# return arguments
 		return args
@@ -560,7 +570,17 @@ class Esolang:
 	# run algorithm
 	def run_algorithm(self, algorithm_name:str, algorithm_args:list=[], return_variable_name:str=""):
 		# get algorithm
-		if algorithm_name not in self.algorithms and algorithm_name not in self.script_algorithms:
+		if type(algorithm_name) == type([]):
+			temporary_algorithm = {
+				'temp alg': {
+					'args_name': 'args',
+					'data': [[x for x in algorithm_name if x]]
+				}
+			}
+			self.script_algorithms.update(temporary_algorithm)
+			self.run_algorithm("temp alg", algorithm_args, return_variable_name)
+			del self.script_algorithms['temp alg']
+		elif algorithm_name not in self.algorithms and algorithm_name not in self.script_algorithms:
 			self.throw(f"Algorithm not found: {algorithm_name}")
 		else:
 			if algorithm_name in self.algorithms:

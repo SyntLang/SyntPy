@@ -1,9 +1,9 @@
 # Variable Algorithms
 
 # meta
-def meta(engine, *args):
+def meta(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -14,17 +14,17 @@ def meta(engine, *args):
 
 	# validate input data
 	if meta_name is None:
-		engine.throw("Meta name not found")
+		self.throw("Meta name not found")
 	if meta_value is None:
-		engine.throw(f"Meta value not found: {meta_name}")
+		self.throw(f"Meta value not found: {meta_name}")
 	
 	# set meta data
-	engine.meta.update({meta_name : meta_value})
+	self.meta.update({meta_name : meta_value})
 
 # var
-def var(engine, *args):
+def var(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -36,13 +36,13 @@ def var(engine, *args):
 		"value" : args[2] if len(args) > 2 else ""
 	}
 
-	# insert variable to engine storage
-	engine.create_variable(variable_data)
+	# insert variable to self storage
+	self.create_variable(variable_data)
 
 # alg
-def alg(engine, *args):
+def alg(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -56,10 +56,10 @@ def alg(engine, *args):
 
 	# throw error if algorithm data is not defined
 	if algorithm_data["name"] is None:
-		engine.throw("Algorithm data not found: name")
+		self.throw("Algorithm data not found: name")
 	
-	# append algorithm data to engine
-	engine.script_algorithms.update({
+	# append algorithm data to self
+	self.script_algorithms.update({
 		algorithm_data["name"] : {
 			"args_name": algorithm_data["args_name"],
 			"data": algorithm_data["data"]
@@ -67,33 +67,33 @@ def alg(engine, *args):
 	})
 
 # result
-def result(engine, *args):
+def result(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
 
 	# get result value and variable name
 	result_value = args[0] if len(args) > 0 else ""
-	result_variable_name = engine.algorithm_output_variable_name_list[-1] if len(engine.algorithm_output_variable_name_list) > 0 else None
+	result_variable_name = self.algorithm_output_variable_name_list[-1] if len(self.algorithm_output_variable_name_list) > 0 else None
 
 	# validate result data
 	if result_variable_name is None:
-		engine.throw("Result variable name not found")
+		self.throw("Result variable name not found")
 		return
-	if result_variable_name not in engine.variables:
-		engine.throw(f"Variable does not exist: {result_variable_name}")
+	if result_variable_name not in self.variables:
+		self.throw(f"Variable does not exist: {result_variable_name}")
 		return
 	
 	# get result data
-	result_variable_data = engine.variables[result_variable_name]
+	result_variable_data = self.variables[result_variable_name]
 
 	# set result data
-	engine.update_variable({
+	self.update_variable({
 		"name": result_variable_name,
 		"type": result_variable_data["type"],
 		"value": result_value
 	})
-	del engine.algorithm_output_variable_name_list[-1]
+	del self.algorithm_output_variable_name_list[-1]
 

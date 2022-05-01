@@ -1,9 +1,9 @@
 # Logic Algorithms
 
 # condition
-def condition(engine, *args):
+def condition(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -23,199 +23,169 @@ def condition(engine, *args):
 
 	# throw error if output variable is not defined
 	if output_variable is None:
-		engine.throw("Output variable not found")
+		self.throw("Output variable not found")
 
 	# throw error if operator is not defined
 	if operator is None:
-		engine.throw("operator not found")
+		self.throw("operator not found")
 	
 	# throw error if input variables are not defined
 	if input_variables is None:
-		engine.throw("Input variables not found")
+		self.throw("Input variables not found")
 	
 	# operators
-	operators = [
-		"equals to",
-		"not equals to",
-		"greater than",
-		"less than",
-		"greater than equal to",
-		"less than equal to",
-		"contains",
-		"does not contain",
-		"starts with",
-		"does not start with",
-		"ends with",
-		"does not end with",
-
-		"=",
-		"!=",
-		">",
-		"<",
-		">=",
-		"<=",
-		"<-",
-		"!<-",
-		"_%",
-		"!_%",
-		"%_",
-		"!%_",
-	]
-
-	# throw error if operator is not valid
-	if operator not in operators:
-		engine.throw(f"Invalid operator: {operator}")
+	operators = self.logic_operators
 
 	# throw error if algorithms are not defined
 	if true_function is None:
-		engine.throw("True function not found")
+		self.throw("True function not found")
 	else:
 		# prepare input variables
-		if engine.value_type(input_variables[0]) == "decimal":
+		if self.value_type(input_variables[0]) == "decimal":
 			if float(input_variables[0]) == int(float(input_variables[0])):
 				input_variables[0] = int(float(input_variables[0]))
-		if engine.value_type(input_variables[1]) == "decimal":
+		if self.value_type(input_variables[1]) == "decimal":
 			if float(input_variables[1]) == int(float(input_variables[1])):
 				input_variables[1] = int(float(input_variables[1]))
-		if engine.value_type(input_variables[0]) == "binary":
+		if self.value_type(input_variables[0]) == "binary":
 			input_variables[0] = 0 if input_variables[0] == "off" else 1
-		if engine.value_type(input_variables[1]) == "binary":
+		if self.value_type(input_variables[1]) == "binary":
 			input_variables[1] = 0 if input_variables[1] == "off" else 1
 		input_variables[0] = str(input_variables[0])
 		input_variables[1] = str(input_variables[1])
 
 		# compare input variable
-		if operator == "equals to" or operator == "=":
+		if operator in operators["="]:
 			if input_variables[0] == input_variables[1]:
 				output_value = 1
 			else:
 				if false_function is not None:
 					output_value = 0
-		elif operator == "not equals to" or operator == "!=":
+		elif operator in operators["!="]:
 			if input_variables[0] != input_variables[1]:
 				output_value = 1
 			else:
 				if false_function is not None:
 					output_value = 0
-		elif operator == "greater than" or operator == ">":
-			if engine.value_type(input_variables[0]) == "number":
-				if engine.value_type(input_variables[1]) == "number":
+		elif operator in operators[">"]:
+			if self.value_type(input_variables[0]) == "number":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) > float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) > float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) > len(str(input_variables[1])):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-			elif engine.value_type(input_variables[0]) == "decimal":
-				if engine.value_type(input_variables[1]) == "number":
+			elif self.value_type(input_variables[0]) == "decimal":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) > float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) > float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) > len(str(input_variables[1])):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-			elif engine.value_type(input_variables[0]) == "text":
-				if engine.value_type(input_variables[1]) == "number":
+			elif self.value_type(input_variables[0]) == "text":
+				if self.value_type(input_variables[1]) == "number":
 					if len(str(input_variables[0])) > float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if len(str(input_variables[0])) > float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if len(str(input_variables[0])) > len(str(input_variables[1])):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-		elif operator == "less than" or operator == "<":
-			if engine.value_type(input_variables[0]) == "number":
-				if engine.value_type(input_variables[1]) == "number":
+		elif operator in operators["<"]:
+			if self.value_type(input_variables[0]) == "number":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) < float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) < float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) < len(str(input_variables[1])):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-			elif engine.value_type(input_variables[0]) == "decimal":
-				if engine.value_type(input_variables[1]) == "number":
+			elif self.value_type(input_variables[0]) == "decimal":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) < float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) < float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) < len(str(input_variables[1])):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-			elif engine.value_type(input_variables[0]) == "text":
-				if engine.value_type(input_variables[1]) == "number":
+			elif self.value_type(input_variables[0]) == "text":
+				if self.value_type(input_variables[1]) == "number":
 					if len(str(input_variables[0])) < float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if len(str(input_variables[0])) < float(input_variables[1]):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if len(str(input_variables[0])) < len(str(input_variables[1])):
 						output_value = 1
 					else:
 						if false_function is not None:
 							output_value = 0
-		elif operator == "greater than equal to" or operator == ">=":
-			if engine.value_type(input_variables[0]) == "number":
-				if engine.value_type(input_variables[1]) == "number":
+		elif operator in operators[">="]:
+			if self.value_type(input_variables[0]) == "number":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) > float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -223,7 +193,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) > float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -231,7 +201,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) > len(str(input_variables[1])):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -239,8 +209,8 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-			elif engine.value_type(input_variables[0]) == "decimal":
-				if engine.value_type(input_variables[1]) == "number":
+			elif self.value_type(input_variables[0]) == "decimal":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) > float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -248,7 +218,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) > float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -256,7 +226,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) > len(str(input_variables[1])):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -264,8 +234,8 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-			elif engine.value_type(input_variables[0]) == "text":
-				if engine.value_type(input_variables[1]) == "number":
+			elif self.value_type(input_variables[0]) == "text":
+				if self.value_type(input_variables[1]) == "number":
 					if len(str(input_variables[0])) > float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -273,7 +243,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if len(str(input_variables[0])) > float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -281,7 +251,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if len(str(input_variables[0])) > len(str(input_variables[1])):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -289,9 +259,9 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-		elif operator == "less than equal to" or operator == "<=":
-			if engine.value_type(input_variables[0]) == "number":
-				if engine.value_type(input_variables[1]) == "number":
+		elif operator in operators["<="]:
+			if self.value_type(input_variables[0]) == "number":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) < float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -299,7 +269,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) < float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -307,7 +277,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) < len(str(input_variables[1])):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -315,8 +285,8 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-			elif engine.value_type(input_variables[0]) == "decimal":
-				if engine.value_type(input_variables[1]) == "number":
+			elif self.value_type(input_variables[0]) == "decimal":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) < float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -324,7 +294,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) < float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -332,7 +302,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) < len(str(input_variables[1])):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -340,8 +310,8 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-			elif engine.value_type(input_variables[0]) == "text":
-				if engine.value_type(input_variables[1]) == "number":
+			elif self.value_type(input_variables[0]) == "text":
+				if self.value_type(input_variables[1]) == "number":
 					if len(str(input_variables[0])) < float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -349,7 +319,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "decimal":
+				elif self.value_type(input_variables[1]) == "decimal":
 					if len(str(input_variables[0])) < float(input_variables[1]):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -357,7 +327,7 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-				elif engine.value_type(input_variables[1]) == "text":
+				elif self.value_type(input_variables[1]) == "text":
 					if len(str(input_variables[0])) < len(str(input_variables[1])):
 						output_value = 1
 					elif input_variables[0] == input_variables[1]:
@@ -365,42 +335,44 @@ def condition(engine, *args):
 					else:
 						if false_function is not None:
 							output_value = 0
-		elif operator == "contains" or operator == "<-":
+		elif operator in operators["<-"]:
 			if str(input_variables[1]) in str(input_variables[0]):
 				output_value = 1
 			else:
 				if false_function is not None:
 					output_value = 0
-		elif operator == "does not contain" or operator == "!<-":
+		elif operator in operators["!<-"]:
 			if str(input_variables[1]) not in str(input_variables[0]):
 				output_value = 1
 			else:
 				if false_function is not None:
 					output_value = 0
-		elif operator == "starts with" or operator == "_%":
+		elif operator in operators["_%"]:
 			if str(input_variables[0]).startswith(str(input_variables[1])):
 				output_value = 1
 			else:
 				if false_function is not None:
 					output_value = 0
-		elif operator == "does not start with" or operator == "!_%":
+		elif operator in operators["!_%"]:
 			if not(str(input_variables[0]).startswith(str(input_variables[1]))):
 				output_value = 1
 			else:
 				if false_function is not None:
 					output_value = 0
-		elif operator == "ends with" or operator == "%_":
+		elif operator in operators["%_"]:
 			if str(input_variables[0]).endswith(str(input_variables[1])):
 				output_value = 1
 			else:
 				if false_function is not None:
 					output_value = 0
-		elif operator == "does not end with" or operator == "!%_":
+		elif operator in operators["!%_"]:
 			if not(str(input_variables[0]).endswith(str(input_variables[1]))):
 				output_value = 1
 			else:
 				if false_function is not None:
 					output_value = 0
+		else:
+			self.throw(f"Invalid operator: {operator}")
 	
 	# convert to binary
 	if output_value:
@@ -416,12 +388,12 @@ def condition(engine, *args):
 	}
 
 	# update output variable
-	engine.update_variable(output_variable_data)
+	self.update_variable(output_variable_data)
 
 # check
-def check(engine, *args):
+def check(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -434,378 +406,351 @@ def check(engine, *args):
 
 	# throw error if condition is not defined
 	if condition is None:
-		engine.throw("Condition not found")
+		self.throw("Condition not found")
 	
 	# throw error if input variables are not defined
 	if input_variables is None:
-		engine.throw("Input variables not found")
+		self.throw("Input variables not found")
 	
 	# conditions
-	conditions = [
-		"equals to",
-		"not equals to",
-		"greater than",
-		"less than",
-		"greater than equal to",
-		"less than equal to",
-		"contains",
-		"does not contain",
-		"starts with",
-		"does not start with",
-		"ends with",
-		"does not end with",
-
-		"=",
-		"!=",
-		">",
-		"<",
-		">=",
-		"<=",
-		"<-",
-		"!<-",
-		"_%",
-		"!_%",
-		"%_",
-		"!%_",
-	]
-
-	# throw error if condition is not valid
-	if condition not in conditions:
-		engine.throw(f"Invalid condition: {condition}")
+	operators = self.logic_operators
+	conditions = operators
 
 	# throw error if algorithms are not defined
 	if true_function is None:
-		engine.throw("True function not found")
+		self.throw("True function not found")
 	else:
 		# prepare input variables
-		if engine.value_type(input_variables[0]) == "decimal":
+		if self.value_type(input_variables[0]) == "decimal":
 			if float(input_variables[0]) == int(float(input_variables[0])):
 				input_variables[0] = int(float(input_variables[0]))
-		if engine.value_type(input_variables[1]) == "decimal":
+		if self.value_type(input_variables[1]) == "decimal":
 			if float(input_variables[1]) == int(float(input_variables[1])):
 				input_variables[1] = int(float(input_variables[1]))
-		if engine.value_type(input_variables[0]) == "binary":
+		if self.value_type(input_variables[0]) == "binary":
 			input_variables[0] = 0 if input_variables[0] == "off" else 1
-		if engine.value_type(input_variables[1]) == "binary":
+		if self.value_type(input_variables[1]) == "binary":
 			input_variables[1] = 0 if input_variables[1] == "off" else 1
 		input_variables[0] = str(input_variables[0])
 		input_variables[1] = str(input_variables[1])
 
 		# compare input variable
-		if condition == "equals to" or condition == "=":
+		if condition in operators["="]:
 			if input_variables[0] == input_variables[1]:
-				engine.run_algorithm(true_function)
+				self.run_algorithm(true_function)
 			else:
 				if false_function is not None:
-					engine.run_algorithm(false_function)
-		elif condition == "not equals to" or condition == "!=":
+					self.run_algorithm(false_function)
+		elif condition in operators["!="]:
 			if input_variables[0] != input_variables[1]:
-				engine.run_algorithm(true_function)
+				self.run_algorithm(true_function)
 			else:
 				if false_function is not None:
-					engine.run_algorithm(false_function)
-		elif condition == "greater than" or condition == ">":
-			if engine.value_type(input_variables[0]) == "number":
-				if engine.value_type(input_variables[1]) == "number":
+					self.run_algorithm(false_function)
+		elif condition in operators[">"]:
+			if self.value_type(input_variables[0]) == "number":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) > len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-			elif engine.value_type(input_variables[0]) == "decimal":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+			elif self.value_type(input_variables[0]) == "decimal":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) > len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-			elif engine.value_type(input_variables[0]) == "text":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+			elif self.value_type(input_variables[0]) == "text":
+				if self.value_type(input_variables[1]) == "number":
 					if len(str(input_variables[0])) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if len(str(input_variables[0])) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if len(str(input_variables[0])) > len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-		elif condition == "less than" or condition == "<":
-			if engine.value_type(input_variables[0]) == "number":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+		elif condition in operators["<"]:
+			if self.value_type(input_variables[0]) == "number":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) < len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-			elif engine.value_type(input_variables[0]) == "decimal":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+			elif self.value_type(input_variables[0]) == "decimal":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) < len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-			elif engine.value_type(input_variables[0]) == "text":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+			elif self.value_type(input_variables[0]) == "text":
+				if self.value_type(input_variables[1]) == "number":
 					if len(str(input_variables[0])) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if len(str(input_variables[0])) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if len(str(input_variables[0])) < len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-		elif condition == "greater than equal to" or condition == ">=":
-			if engine.value_type(input_variables[0]) == "number":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+		elif condition in operators[">="]:
+			if self.value_type(input_variables[0]) == "number":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) > len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-			elif engine.value_type(input_variables[0]) == "decimal":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+			elif self.value_type(input_variables[0]) == "decimal":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) > len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-			elif engine.value_type(input_variables[0]) == "text":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+			elif self.value_type(input_variables[0]) == "text":
+				if self.value_type(input_variables[1]) == "number":
 					if len(str(input_variables[0])) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if len(str(input_variables[0])) > float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if len(str(input_variables[0])) > len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-		elif condition == "less than equal to" or condition == "<=":
-			if engine.value_type(input_variables[0]) == "number":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+		elif condition in operators["<="]:
+			if self.value_type(input_variables[0]) == "number":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) < len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-			elif engine.value_type(input_variables[0]) == "decimal":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+			elif self.value_type(input_variables[0]) == "decimal":
+				if self.value_type(input_variables[1]) == "number":
 					if float(input_variables[0]) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if float(input_variables[0]) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if float(input_variables[0]) < len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-			elif engine.value_type(input_variables[0]) == "text":
-				if engine.value_type(input_variables[1]) == "number":
+							self.run_algorithm(false_function)
+			elif self.value_type(input_variables[0]) == "text":
+				if self.value_type(input_variables[1]) == "number":
 					if len(str(input_variables[0])) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "decimal":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "decimal":
 					if len(str(input_variables[0])) < float(input_variables[1]):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-				elif engine.value_type(input_variables[1]) == "text":
+							self.run_algorithm(false_function)
+				elif self.value_type(input_variables[1]) == "text":
 					if len(str(input_variables[0])) < len(str(input_variables[1])):
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					elif input_variables[0] == input_variables[1]:
-						engine.run_algorithm(true_function)
+						self.run_algorithm(true_function)
 					else:
 						if false_function is not None:
-							engine.run_algorithm(false_function)
-		elif condition == "contains" or condition == "<-":
+							self.run_algorithm(false_function)
+		elif condition in operators["<-"]:
 			if str(input_variables[1]) in str(input_variables[0]):
-				engine.run_algorithm(true_function)
+				self.run_algorithm(true_function)
 			else:
 				if false_function is not None:
-					engine.run_algorithm(false_function)
-		elif condition == "does not contain" or condition == "!<-":
+					self.run_algorithm(false_function)
+		elif condition in operators["!<-"]:
 			if str(input_variables[1]) not in str(input_variables[0]):
-				engine.run_algorithm(true_function)
+				self.run_algorithm(true_function)
 			else:
 				if false_function is not None:
-					engine.run_algorithm(false_function)
-		elif condition == "starts with" or condition == "_%":
+					self.run_algorithm(false_function)
+		elif condition in operators["_%"]:
 			if str(input_variables[0]).startswith(str(input_variables[1])):
-				engine.run_algorithm(true_function)
+				self.run_algorithm(true_function)
 			else:
 				if false_function is not None:
-					engine.run_algorithm(false_function)
-		elif condition == "does not start with" or condition == "!_%":
+					self.run_algorithm(false_function)
+		elif condition in operators["!_%"]:
 			if not(str(input_variables[0]).startswith(str(input_variables[1]))):
-				engine.run_algorithm(true_function)
+				self.run_algorithm(true_function)
 			else:
 				if false_function is not None:
-					engine.run_algorithm(false_function)
-		elif condition == "ends with" or condition == "%_":
+					self.run_algorithm(false_function)
+		elif condition in operators["%_"]:
 			if str(input_variables[0]).endswith(str(input_variables[1])):
-				engine.run_algorithm(true_function)
+				self.run_algorithm(true_function)
 			else:
 				if false_function is not None:
-					engine.run_algorithm(false_function)
-		elif condition == "does not end with" or condition == "!%_":
+					self.run_algorithm(false_function)
+		elif condition in operators["!%_"]:
 			if not(str(input_variables[0]).endswith(str(input_variables[1]))):
-				engine.run_algorithm(true_function)
+				self.run_algorithm(true_function)
 			else:
 				if false_function is not None:
-					engine.run_algorithm(false_function)
+					self.run_algorithm(false_function)
+		else:
+			self.throw(f"Invalid condition: {condition}")
 

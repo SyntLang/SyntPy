@@ -44,6 +44,7 @@ algorithms = {
 	"multiply": modules.synt.operator_algorithms.multiply,
 	"divide": modules.synt.operator_algorithms.divide,
 	"power": modules.synt.operator_algorithms.power,
+	"info": modules.synt.operator_algorithms.object_type,
 
 	# logic algorithms
 	"check": modules.synt.logic_algorithms.check,

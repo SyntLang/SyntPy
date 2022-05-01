@@ -1,23 +1,23 @@
 # Basic Synt Algorithms
 
 # version
-def version(engine, *args):
+def version(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
 	
-	print(f"Running Synt Engine v{engine.ver}")
+	print(f"Running Synt self v{self.ver}")
 
 # comment
-def comment(engine, *args):
+def comment(self, *args):
 	pass
 
 # output
-def output(engine, *args):
+def output(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -27,9 +27,9 @@ def output(engine, *args):
 	print(output_data)
 
 # input
-def input_function(engine, *args):
+def input_function(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
@@ -44,7 +44,7 @@ def input_function(engine, *args):
 
 	# throw error if output variable is not defined
 	if output_variable is None:
-		engine.throw("Output variable not found")
+		self.throw("Output variable not found")
 	
 	# take input
 	input_value = input(input_statement)
@@ -57,15 +57,15 @@ def input_function(engine, *args):
 	}
 
 	# set output variable
-	engine.variables.update({output_variable : output_variable_data})
+	self.variables.update({output_variable : output_variable_data})
 
 # end
-def end(engine, *args):
+def end(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
 	
-	engine.run_status = 'break'
+	self.run_status = 'break'
 

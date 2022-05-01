@@ -1,35 +1,35 @@
 # Debug Algorithms
 
 # restore
-def restore(engine, *args):
+def restore(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
-		engine.throw('Restore cannot be used in run mode')
+	if self.run_status == "run":
+		self.throw('Restore cannot be used in run mode')
 	else:
-		engine.run_status = 'run'
+		self.run_status = 'run'
 
 # error
-def error(engine, *args):
+def error(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
 
 	error_message = args[0] if len(args) > 0 else "Unknown Error"
 	
-	engine.throw(error_message)
+	self.throw(error_message)
 
 # warn
-def warn(engine, *args):
+def warn(self, *args):
 	# check if run_status is run
-	if engine.run_status == "run":
+	if self.run_status == "run":
 		pass
 	else:
 		return
 	
 	warn_message = args[0] if len(args) > 0 else "Unknown Warning"
 	
-	engine.throw(warn_message, type="WARN")
-	engine.run_status = 'run'
+	self.throw(warn_message, type="WARN")
+	self.run_status = 'run'
 
