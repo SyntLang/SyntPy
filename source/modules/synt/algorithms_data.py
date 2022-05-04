@@ -12,6 +12,7 @@ import modules.synt.operator_algorithms
 import modules.synt.logic_algorithms
 import modules.synt.loop_algorithms
 import modules.synt.external_resource_algorithms
+import modules.synt.collection_algorithms
 
 # algorithms
 algorithms = {
@@ -56,4 +57,10 @@ algorithms = {
 
 	# external resource algorithms
 	"module": modules.synt.external_resource_algorithms.module,
+
+	# collection algorithms
+	"count": modules.synt.collection_algorithms.count,
+	"insert": modules.synt.collection_algorithms.insert,
+	"remove": modules.synt.collection_algorithms.remove,
+	"delete": modules.synt.collection_algorithms.delete,
 }

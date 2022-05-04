@@ -104,7 +104,8 @@ class Synt(modules.esolang_extensions.Esolang):
 	special_characters_trigger = '#'
 	variable_trigger = '#'
 	meta_trigger = '?'
-	item_trigger = "%"
+	initial_item_trigger = '<'
+	end_item_trigger = ">"
 
 	# run status
 	log = False
@@ -132,7 +133,7 @@ class Synt(modules.esolang_extensions.Esolang):
 			try:
 				self.run(token)
 			except Exception as UnknownError:
-				self.throw(f'{UnknownError}', type="CORE ERROR")
+				self.throw(f'{UnknownError}', type=f"CORE ERROR::{self.run_token_id}::{token}")
 			
 			# update token id
 			self.run_token_id += 1
