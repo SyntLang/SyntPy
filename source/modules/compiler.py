@@ -160,120 +160,69 @@ class Compiler:
 			# write spyc
 			spyc.write(self.super_code)
 
-# use compiler module
-def compiler_main():
-	# check arguments
-	args = sys.argv
+# check arguments
+args = sys.argv
+if "*compile" in args or "*c" in args:
+	# warn
+	print("Compile Mode is still in heavy development.")
+	use = input("Do you want to continue? (Y[Default]/N):")
+	if use.lower() in ["n", "no"]:
+		sys.exit()
 
-	# Exe Compile
-	if "*compile" in args or "*c" in args:
-		# warn
-		print("Compile Mode is still in heavy development.")
-		use = input("Do you want to continue? (Y[Default]/N):")
-		if use.lower() in ["n", "no"]:
+	# get argument index
+	arg_index = args.index("*compile" if "*compile" in args else "*c")
+
+	# get further arguments
+	filename = "main.synt"
+	if arg_index < len(args) - 1:
+		filename = args[arg_index + 1]
+	
+	# source code file
+	while not(os.path.isfile(filename)):
+		filename = input("File Path(empty to quit): ")
+		if not(filename):
+			print("Terminated.")
+			sys.exit()
+	
+	# get source code
+	with open(filename, "r") as source_code_file:
+		os.system("cls")
+		source_code = source_code_file.read()
+
+		# compile spyc
+		print("Compiling to SPyC")
+		compiler = Compiler(src_code=source_code)
+
+		# check spyc
+		if os.path.isfile(f"{compiler.expo_dir}/{compiler.cname}.spyc"):
+			print("Successfully compiled to SPyC.")
+		else:
+			print("Compiling to SPyC Failed.")
 			sys.exit()
 
-		# get argument index
-		arg_index = args.index("*compile" if "*compile" in args else "*c")
+		# compile exe
+		print("Compiling to EXE")
+		#command = f"{compiler.py_dir}\\python.exe "
+		command = f"py "
+		command += "-m PyInstaller "
+		command += f"\"{compiler.expo_dir}\\{compiler.cname}.spyc\" "
+		command += "--onefile --clean --name \"Project\" "
+		command += f"--distpath \"{compiler.expo_dir}\" "
+		command += "&& cls"
+		os.system(command)
 
-		# get further arguments
-		filename = "main.synt"
-		if arg_index < len(args) - 1:
-			filename = args[arg_index + 1]
-		
-		# source code file
-		while not(os.path.isfile(filename)):
-			filename = input("File Path(empty to quit): ")
-			if not(filename):
-				print("Terminated.")
-				sys.exit()
-		
-		# get source code
-		with open(filename, "r") as source_code_file:
-			os.system("cls")
-			source_code = source_code_file.read()
+		# successful compile
+		if os.path.isfile(f"{compiler.expo_dir}/Project.exe"):
+			print("Compiled successfully.")
 
-			# compile spyc
-			print("Compiling to SPyC")
-			compiler = Compiler(src_code=source_code)
+			# remove buffer files
+			os.remove(f"{compiler.expo_dir}/{compiler.cname}.spyc")
+			print(f"PATH: {compiler.expo_dir}\\Project.exe")
+			sys.exit()
+		else:
+			print("Compiling to EXE failed.")
 
-			# check spyc
-			if os.path.isfile(f"{compiler.expo_dir}/{compiler.cname}.spyc"):
-				print("Successfully compiled to SPyC.")
-			else:
-				print("Compiling to SPyC Failed.")
-				sys.exit()
-
-			# compile exe
-			print("Compiling to EXE")
-			#command = f"{compiler.py_dir}\\python.exe "
-			command = f"py "
-			command += "-m PyInstaller "
-			command += f"\"{compiler.expo_dir}\\{compiler.cname}.spyc\" "
-			command += "--onefile --clean --name \"Project\" "
-			command += f"--distpath \"{compiler.expo_dir}\" "
-			command += "&& cls"
-			os.system(command)
-
-			# successful compile
-			if os.path.isfile(f"{compiler.expo_dir}/Project.exe"):
-				print("Compiled successfully.")
-
-				# remove buffer files
-				os.remove(f"{compiler.expo_dir}/{compiler.cname}.spyc")
-				print(f"PATH: {compiler.expo_dir}\\Project.exe")
-				sys.exit()
-			else:
-				print("Compiling to EXE failed.")
-
-				# rename spyc to py
-				print("Converting SPyC to Python Executable")
-				orginal_name = f"{compiler.expo_dir}/{compiler.cname}.spyc"
-				new_name = f"{compiler.expo_dir}/{compiler.cname}.py"
-				os.rename(orginal_name, new_name)
-
-				# check py
-				if os.path.isfile(f"{compiler.expo_dir}/{compiler.cname}.py"):
-					print("Successfully converted SPyC to Python Executable.")
-					print(f"PATH: {compiler.expo_dir}\\{compiler.cname}.py")
-					sys.exit()
-				else:
-					print("Converting SPyC to Python Executable failed.")
-					sys.exit()
-
-	# SPyC Compile
-	if "*SPyC" in args or "*s" in args:
-		# get argument index
-		arg_index = args.index("*SPyC" if "*SPyC" in args else "*s")
-
-		# get further arguments
-		filename = "main.synt"
-		if arg_index < len(args) - 1:
-			filename = args[arg_index + 1]
-		
-		# source code file
-		while not(os.path.isfile(filename)):
-			filename = input("File Path(empty to quit): ")
-			if not(filename):
-				print("Terminated.")
-				sys.exit()
-		
-		# get source code
-		with open(filename, "r") as source_code_file:
-			os.system("cls")
-			source_code = source_code_file.read()
-
-			# compile spyc
-			print("Compiling to SPyC")
-			compiler = Compiler(src_code=source_code)
-
-			# check spyc
-			if os.path.isfile(f"{compiler.expo_dir}/{compiler.cname}.spyc"):
-				print("Successfully compiled to SPyC.")
-			else:
-				print("Compiling to SPyC Failed.")
-				sys.exit()
-
+			# rename spyc to py
 			print("Converting SPyC to Python Executable")
 			orginal_name = f"{compiler.expo_dir}/{compiler.cname}.spyc"
 			new_name = f"{compiler.expo_dir}/{compiler.cname}.py"
@@ -287,63 +236,4 @@ def compiler_main():
 			else:
 				print("Converting SPyC to Python Executable failed.")
 				sys.exit()
-	
-	# SPyC Run
-	if "**SPyC" in args or "**s" in args:
-		# get argument index
-		arg_index = args.index("**SPyC" if "**SPyC" in args else "**s")
-
-		# get further arguments
-		filename = "main.synt"
-		if arg_index < len(args) - 1:
-			filename = args[arg_index + 1]
-		
-		# source code file
-		while not(os.path.isfile(filename)):
-			filename = input("File Path(empty to quit): ")
-			if not(filename):
-				print("Terminated.")
-				sys.exit()
-		
-		# get source code
-		with open(filename, "r") as source_code_file:
-			os.system("cls")
-			source_code = source_code_file.read()
-
-			# compile spyc
-			print("Compiling to SPyC")
-			compiler = Compiler(src_code=source_code)
-
-			# check spyc
-			if os.path.isfile(f"{compiler.expo_dir}/{compiler.cname}.spyc"):
-				print("Successfully compiled to SPyC.")
-			else:
-				print("Compiling to SPyC Failed.")
-				sys.exit()
-
-			print("Converting SPyC to Python Executable")
-			orginal_name = f"{compiler.expo_dir}/{compiler.cname}.spyc"
-			new_name = f"{compiler.expo_dir}/{compiler.cname}.py"
-			os.rename(orginal_name, new_name)
-
-			# check py
-			if os.path.isfile(f"{compiler.expo_dir}/{compiler.cname}.py"):
-				print("Successfully converted SPyC to Python Executable.")
-				print(f"PATH: {compiler.expo_dir}\\{compiler.cname}.py")
-			else:
-				print("Converting SPyC to Python Executable failed.")
-				sys.exit()
-			
-			# run py
-			print("Running Python Executable")
-			os.system(f"{compiler.expo_dir}\\{compiler.cname}.py")
-
-			# delete py
-			os.remove(f"{compiler.expo_dir}\\{compiler.cname}.py")
-
-			# delete expo_dir
-			os.rmdir(compiler.expo_dir)
-
-# use compiler
-compiler_main()
 
