@@ -8,7 +8,7 @@ def version(self, *args):
 	else:
 		return
 	
-	print(f"Running Synt self v{self.ver}")
+	print(f"Running Synt v{self.ver}")
 
 # comment
 def comment(self, *args):

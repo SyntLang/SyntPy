@@ -63,7 +63,8 @@ class Esolang:
 	special_characters_trigger = '\\'
 	variable_trigger = '$'
 	meta_trigger = '@'
-	item_trigger = '#'
+	initial_item_trigger = '['
+	end_item_trigger = ']'
 
 	# run case
 	log = False
@@ -231,30 +232,20 @@ class Esolang:
 		partial_collections = []
 		itr_index = 0
 		while itr_index < len(organized_tokens):
-			if itr_index == len(organized_tokens) - 1:
-				# check if token is collection or algorithm
-				if organized_tokens[itr_index][0] in self.splitter_tokens:
-					# throw error that collection is unknown
-					self.throw("Unknown collection: " + str(organized_tokens[itr_index][0]))
+			# check if token is collection or algorithm
+			if organized_tokens[itr_index][0] in self.splitter_tokens:
+				# check if index not 0
+				if itr_index > 0:
+					# add to previous collection
+					partial_collections[-1] = partial_collections[-1] + [organized_tokens[itr_index][1:-1]]
 				else:
-					# simply add to partial collections
-					partial_collections.append(organized_tokens[itr_index])
-					itr_index += 1
+					self.throw(f"Unexpected Token: {organized_tokens[itr_index][0]}")
 			else:
-				# check if token is collection or algorithm
-				if organized_tokens[itr_index][0] in self.splitter_tokens:
-					# check if index not 0
-					if itr_index > 0:
-						# add to previous collection
-						partial_collections[-1] = partial_collections[-1] + organized_tokens[itr_index][1:-1]
-					else:
-						self.throw(f"Unexpected Token: {organized_tokens[itr_index][0]}")
-				else:
-					# simply add to partial collections
-					partial_collections.append(organized_tokens[itr_index])
+				# simply add to partial collections
+				partial_collections.append(organized_tokens[itr_index])
 
-				# increment index
-				itr_index += 1
+			# increment index
+			itr_index += 1
 		
 		# set organized tokens to partial collections
 		organized_tokens = partial_collections
@@ -391,11 +382,12 @@ class Esolang:
 								partial_partial_token = partial_token.split(f"{self.variable_trigger}{variable}{self.variable_trigger}")
 								if len(partial_partial_token) > 1:
 									if partial_partial_token[1]:
-										if partial_partial_token[1][0] == self.item_trigger:
-											partial_partial_token = partial_partial_token[1].split(self.item_trigger)
-											if len(partial_partial_token) > 2:
-												item_num = partial_partial_token[1]
-												original_item_num = partial_partial_token[1]
+										if partial_partial_token[1][0] == self.initial_item_trigger:
+											partial_partial_token = partial_partial_token[1].split(self.end_item_trigger)
+											partial_partial_token[0] = partial_partial_token[0][1:]
+											if len(partial_partial_token) >= 2:
+												item_num = partial_partial_token[0]
+												original_item_num = partial_partial_token[0]
 												if self.value_type(str(item_num)) == self.variable_type_definitions["int"]:
 													item_num = int(item_num)
 												elif self.value_type(str(item_num)) == self.variable_type_definitions["float"]:
@@ -403,21 +395,21 @@ class Esolang:
 												elif self.value_type(str(item_num)) == self.variable_type_definitions["bool"]:
 													item_num = 0 if self.boolean_names["0"] == item_num else 1
 												else:
-													item_num = len(item_num)
+													item_num = len(item_num) - 1
 												coll_item = self.variables[variable]["value"][int(item_num) if int(item_num) < len(self.variables[variable]["value"]) else -1][0] if len(self.variables[variable]["value"]) > 0 else ""
-												partial_token = partial_token.replace(f"{self.variable_trigger}{variable}{self.variable_trigger}{self.item_trigger}{original_item_num}{self.item_trigger}", coll_item)
+												partial_token = partial_token.replace(f"{self.variable_trigger}{variable}{self.variable_trigger}{self.initial_item_trigger}{original_item_num}{self.end_item_trigger}", coll_item)
 											else:
 												partial_token = partial_token.replace(f"{self.variable_trigger}{variable}{self.variable_trigger}", str(self.variables[variable]["value"])[1:-1].replace('"', '').replace("'", ''))
 										else:
 											partial_token = partial_token.replace(f"{self.variable_trigger}{variable}{self.variable_trigger}", str(self.variables[variable]["value"])[1:-1].replace('"', '').replace("'", ''))
 									else:
-										partial_token = partial_token.replace(f"{self.variable_trigger}{variable}{self.variable_trigger}", str(self.variables[variable]["value"])[1:-1].replace('"', '').replace("'", ''))
+										partial_token = partial_token.replace(f"{self.variable_trigger}{variable}{self.variable_trigger}", str(self.variables[variable]["value"])[1:-1].replace('"', '').replace("'", ''))	
 								else:
 									partial_token = partial_token.replace(f"{self.variable_trigger}{variable}{self.variable_trigger}", str(self.variables[variable]["value"])[1:-1].replace('"', '').replace("'", ''))
 						else:
-							partial_token = partial_token.replace(f"{self.variable_trigger}{variable}{self.variable_trigger}", self.variables[variable]["value"])
+							partial_token = partial_token.replace(f"{self.variable_trigger}{variable}{self.variable_trigger}", str(self.variables[variable]["value"]))
 					for special_character in self.special_characters:
-						partial_token = partial_token.replace(f'{self.special_characters_trigger}{special_character}', self.special_characters[special_character])
+						partial_token = partial_token.replace(f'{self.special_characters_trigger}{special_character}', str(self.special_characters[special_character]))
 					
 					# add to partial args
 					partial_args.append(partial_token)
@@ -574,7 +566,7 @@ class Esolang:
 			temporary_algorithm = {
 				'temp alg': {
 					'args_name': 'args',
-					'data': [[x for x in algorithm_name if x]]
+					'data': [x for x in algorithm_name if x]
 				}
 			}
 			self.script_algorithms.update(temporary_algorithm)
