@@ -4,6 +4,7 @@
 import modules
 import os
 import sys
+import time
 
 # general modules
 import modules.esolang_extensions
@@ -17,7 +18,7 @@ class Synt(modules.esolang_extensions.Esolang):
 	# Synt self Information
 	name = "Synt"
 	file_ext = ".synt"
-	ver = "0.4[DEV]"
+	ver = "0.7[DEV]"
 
 	# Synt self Tokens
 	splitter_tokens = {
@@ -113,6 +114,11 @@ class Synt(modules.esolang_extensions.Esolang):
 	run_token_id = 0
 	compiled = False
 	compiled_code = ""
+
+	# engine components
+	tick = 0
+	last_tick = time.time()
+	tick_paused = False
 
 	# run language
 	def run_code(self, code:str):

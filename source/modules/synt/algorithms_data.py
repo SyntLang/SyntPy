@@ -12,7 +12,10 @@ import modules.synt.operator_algorithms
 import modules.synt.logic_algorithms
 import modules.synt.loop_algorithms
 import modules.synt.external_resource_algorithms
-import modules.synt.collection_algorithms
+import modules.synt.iterable_algorithms
+import modules.synt.time_algorithms
+import modules.synt.console_algorithms
+import modules.synt.file_algorithms
 
 # algorithms
 algorithms = {
@@ -58,9 +61,23 @@ algorithms = {
 	# external resource algorithms
 	"module": modules.synt.external_resource_algorithms.module,
 
-	# collection algorithms
-	"count": modules.synt.collection_algorithms.count,
-	"insert": modules.synt.collection_algorithms.insert,
-	"remove": modules.synt.collection_algorithms.remove,
-	"delete": modules.synt.collection_algorithms.delete,
+	# iterable algorithms
+	"count": modules.synt.iterable_algorithms.count,
+	"insert": modules.synt.iterable_algorithms.insert,
+	"remove": modules.synt.iterable_algorithms.remove,
+	"delete": modules.synt.iterable_algorithms.delete,
+
+	# time algorithms
+	"reset_tick": modules.synt.time_algorithms.reset_tick,
+	"pause_tick": modules.synt.time_algorithms.pause_tick,
+	"resume_tick": modules.synt.time_algorithms.resume_tick,
+	"get_tick": modules.synt.time_algorithms.get_tick,
+
+	# console algorithms
+	"clear": modules.synt.console_algorithms.clear,
+	"console": modules.synt.console_algorithms.console,
+	
+	# file algorithms
+	"read": modules.synt.file_algorithms.read,
+	"write": modules.synt.file_algorithms.write,
 }
