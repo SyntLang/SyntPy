@@ -9,6 +9,8 @@ import time
 # general modules
 import modules.esolang_extensions
 import modules.synt
+import modules.synt.interactive_mode
+import modules.synt.file_mode
 
 # synt modules
 import modules.synt.algorithms_data
@@ -114,11 +116,23 @@ class Synt(modules.esolang_extensions.Esolang):
 	run_token_id = 0
 	compiled = False
 	compiled_code = ""
+	mode = ""
+	mode_override = ""
 
 	# engine components
 	tick = 0
 	last_tick = time.time()
 	tick_paused = False
+
+	# console
+	cmd = os.popen("ver").read()
+	cmd = cmd.strip("").strip("\n")
+	cmd = cmd.startswith("Microsoft")
+	console = "cmd"
+	console_clear_cmd = "cls" if cmd else "clear"
+
+	interactive = modules.synt.interactive_mode.interactive
+	file = modules.synt.file_mode.file
 
 	# run language
 	def run_code(self, code:str):
@@ -154,26 +168,26 @@ class Synt(modules.esolang_extensions.Esolang):
 		# check compiled
 		if self.compiled:
 			# run compiled code
-			os.system("cls")
+			os.system(f"{self.console_clear_cmd}")
 			self.run_code(self.compiled_code)
 
 			# block rest of self
 			return
 
 		# ready
-		os.system("cls")
+		os.system(f"{self.console_clear_cmd}")
 		print(f"Running Synt self v{self.ver}")
 
 		# modes selections
 		mode_valid = False
-		mode = ""
+		mode = self.mode_override if self.mode_override else ""
+		self.mode = mode
 
 		# get self arguments
 		self_options = sys.argv
 
-		# remove python source file name
-		if self_options[0].endswith('.py'):
-			self_options.pop(0)
+		# remove source file name
+		self_options.pop(0)
 
 		# check if arguments passed
 		if len(self_options) > 0:
@@ -190,6 +204,9 @@ class Synt(modules.esolang_extensions.Esolang):
 				mode = "f"
 				code_file = self_options
 		
+		# force mode
+		if self.mode_override:
+			mode = self.mode_override
 
 		# select mode if not specified in arguments
 		if mode not in ["f", "file", "i", "interactive", "q", "quit", "compile", "c"]:
@@ -210,9 +227,10 @@ class Synt(modules.esolang_extensions.Esolang):
 					# more instructions
 					print("Mode not valid.")
 					print("Valid modes: file[f], interactive[i], quit[q], compile[c]")
+			self.mode = mode
 		
 		# clear console before continuing
-		os.system("cls")
+		os.system(f"{self.console_clear_cmd}")
 
 		# quit if mode is quit
 		if mode in ["quit", "q"]:
@@ -230,84 +248,4 @@ class Synt(modules.esolang_extensions.Esolang):
 		# compile mode
 		if mode in ["compile", "c"]:
 			print("Compiling can only be done using command line arguments.")
-
-	# file mode
-	def file(self, code_file:str):
-		# request code file
-		problem_args = False
-		while True:
-			# get file
-			requested_file = code_file if code_file and not problem_args else input("File Path(empty to quit): ")
-			problem_args = True
-
-			# check if wants to quit
-			if requested_file == "":
-				os.system("cls")
-				print("Terminated.")
-				return
-
-			# check if file exists
-			if os.path.isfile(requested_file):
-				# get code from requested file
-				with open(requested_file, "r") as code_file:
-					code = code_file.read()
-					
-					# clear console
-					os.system("cls")
-
-					# run code as synt script
-					self.run_code(code)
-
-					# stop loop from requesting file again
-					break
-			else:
-				# more instructions
-				print("File Not Found!")
-				print("If your file exists consider putting is beside self or use complete path to file.")
-	
-	# interactive mode
-	def interactive(self):
-		# start self
-		self.reset()
-		self.run_status = "run"
-
-		# run forever till ended
-		main_code = ""
-		multi_line_token = ""
-		interactive_running = True
-		while interactive_running:
-			# get code
-			code = input("Synt>>> " if main_code == "" else "        ")
-			main_code += code + "\n"
-
-			# check if any multi-line code
-			multi_line_token = multi_line_token if multi_line_token else ""
-			if multi_line_token:
-				for token in self.unblocker_tokens:
-					if token in code:
-						multi_line_token = ""
-						break
-			else:
-				for token in self.blocker_tokens:
-					if token in code:
-						multi_line_token = token
-						break
-
-			# run code
-			if multi_line_token == "":
-				if main_code[:-1]:
-					tokens = self.tokenize(main_code[:-1])
-					for token in tokens:
-						self.run_token_id = 0
-						while self.run_token_id < 1:
-							self.run_token_id += 1
-							try:
-								self.run(token)
-							except Exception as UnknownError:
-								self.throw(str(UnknownError))
-				main_code = ""
-			
-			# check if wants to quit
-			if self.run_status == "break":
-				return
 

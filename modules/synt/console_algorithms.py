@@ -3,11 +3,6 @@
 # modules
 import os
 
-# confirm prompt
-cmd = os.popen("ver").read()
-cmd = cmd.strip("").strip("\n")
-cmd = cmd.startswith("Microsoft")
-
 # clear
 def clear(self, *args):
 	# check if run_status is run
@@ -17,7 +12,7 @@ def clear(self, *args):
 		return
 	
 	# check if running command prompt
-	if cmd:
+	if self.cmd:
 		os.system("cls")
 	else:
 		self.throw("Console functions are only available in command prompt")

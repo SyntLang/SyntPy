@@ -242,9 +242,9 @@ def compiler_main():
 					sys.exit()
 
 	# SPyC Compile
-	if "*SPyC" in args or "*s" in args:
+	if "*spyc" in args or "*s" in args:
 		# get argument index
-		arg_index = args.index("*SPyC" if "*SPyC" in args else "*s")
+		arg_index = args.index("*spyc" if "*spyc" in args else "*s")
 
 		# get further arguments
 		filename = "main.synt"
@@ -289,9 +289,9 @@ def compiler_main():
 				sys.exit()
 	
 	# SPyC Run
-	if "**SPyC" in args or "**s" in args:
+	if "**spyc" in args or "**s" in args:
 		# get argument index
-		arg_index = args.index("**SPyC" if "**SPyC" in args else "**s")
+		arg_index = args.index("**spyc" if "**spyc" in args else "**s")
 
 		# get further arguments
 		filename = "main.synt"
